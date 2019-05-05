@@ -1,23 +1,87 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { Card, Col, Row, Statistic, Typography } from 'antd';
 
-export const BudgetOverview = () => {
+export const BudgetOverview = ({startDate, endDate, daysLeft, availableFunds, remainderLastPeriod, budgeted}) => {
+
+  const forNextMonth = (availableFunds + remainderLastPeriod - budgeted).toFixed(2);
+
   return(
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell rowSpan='4' style={{background: "white"}}/>
-        <Table.HeaderCell colSpan='3' textAlign="center" style={{border: "1px solid rgba(34,36,38,.15)"}}><h2>Month</h2></Table.HeaderCell>
-      </Table.Row>
-      <Table.Row>
-      </Table.Row>
-      <Table.Row>
-        <Table.HeaderCell colSpan='3' textAlign="center">Overbudgeted</Table.HeaderCell>
-      </Table.Row>
-      <Table.Row>
-        <Table.HeaderCell>Budgeted</Table.HeaderCell>
-        <Table.HeaderCell>Spent</Table.HeaderCell>
-        <Table.HeaderCell>Balance</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
+    <Card>
+      <Row>
+        <Col span={8}>
+          <Row>
+            <Col span={8}>
+              <Statistic 
+                title='From'
+                value={startDate.format('MMM Do')}
+              />
+            </Col>
+            <Col span={8}>
+              <Statistic 
+                title='To'
+                value={endDate.format('MMM Do')}
+              />
+            </Col>
+            <Col span={8}>
+              <Statistic
+                title='Days left'
+                value={daysLeft}
+              />
+            </Col>
+          </Row>
+        </Col>
+
+        <Col span={8}>
+          <Row gutter={12}>
+            <Col 
+              span={12} 
+              style={{textAlign: 'end'}}
+            >
+              <Typography.Text strong>{availableFunds}</Typography.Text>
+            </Col>
+            <Col span={12}>Available funds</Col>
+          </Row>
+          <Row gutter={12}>
+            <Col 
+              span={12} 
+              style={{textAlign: 'end'}}
+            >
+              <Typography.Text 
+                strong
+                type={remainderLastPeriod < 0.0 ? 'danger' : ''}
+              >
+                {remainderLastPeriod}
+              </Typography.Text>
+            </Col>            
+            <Col span={12} >
+              {remainderLastPeriod < 0.0 ? "Overspent last period" : "Left over from last period"}
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col 
+              span={12} 
+              style={{textAlign: 'end'}}
+            >
+              <Typography.Text strong>{budgeted}</Typography.Text>
+            </Col>            
+            <Col span={12}>Total budgeted</Col>
+          </Row>
+          <Row gutter={12}>
+            <Col 
+              span={12} 
+              style={{textAlign: 'end'}}
+            >
+              <Typography.Text 
+                strong
+                type={forNextMonth < 0.0 ? 'danger' : ''}
+              >
+                {forNextMonth}
+              </Typography.Text>
+            </Col>            
+            <Col span={12}>For next month</Col>
+          </Row>
+        </Col>
+      </Row>
+    </Card>
   )
 }

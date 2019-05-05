@@ -3,14 +3,14 @@ import './App.css';
 
 import { Layout, Menu, Icon, Row, Col, Card } from 'antd';
 
-import { BudgetGroup } from '../budgetgroup/BudgetGroup';
 import { BudgetCategory } from '../budgetcategory/BudgetCategory';
 import { BudgetOverview } from '../budgetoverview/BudgetOverview';
+import moment from 'moment';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
-const data = [{
+const categories = [{
   key: 1,
   name: 'Groceries',
   budgeted: 200.0,
@@ -35,11 +35,18 @@ const data = [{
   spent: 107.98
 }];
 
+const data = {
+  availableFunds: 2705.42,
+  remainder: -21.67
+};
+
 const rowStyle = {
   marginBottom: '24px'
 };
 
-const daysLeft = 13;
+const startDate = moment().date() > 25 ? moment().date(26) : moment().date(26).subtract(1, 'month');
+const endDate = moment().date() > 25 ? moment().date(25).add(1, 'month') : moment().date(25);
+const daysLeft = endDate.diff(moment(), 'days');
 
 class App extends React.Component {
   state = {
@@ -48,6 +55,27 @@ class App extends React.Component {
 
   onCollapse = (collapsed) => {
     this.setState({ collapsed });
+  }
+
+  createRows(numCols) {
+    return categories
+      .map((category, index) => <BudgetCategory props={category} daysLeft={daysLeft} />)
+      .reduce(function(rows, category) {
+        if (rows[rows.length - 1].length < numCols) {
+          rows[rows.length - 1].push(<Col span={24/numCols}>{category}</Col>);
+        } else {
+          rows.push([<Col span={24/numCols}>{category}</Col>]);
+        }
+        
+        return rows;
+      }, [[]])
+      .map((category, index) => {
+      return (
+        <Row gutter={24} style={rowStyle}>
+          { category.map((rowContent) => rowContent) }
+        </Row>
+      )
+    });
   }
 
   render() {
@@ -96,26 +124,24 @@ class App extends React.Component {
           <Layout>
             <Header style={{ background: '#fff', padding: 0, marginBottom: 10 }} />
 
-            <Content style={{ margin: '0 16px' }}>
+            <Content style={{ margin: '0 16px', maxWidth: '60%' }}>
               <Row style={rowStyle}>
                 <Col span={24}>
-                  <Card title="Overview">Content</Card>
+                  <BudgetOverview 
+                    startDate={startDate} 
+                    endDate={endDate} 
+                    daysLeft={daysLeft}
+                    availableFunds={data.availableFunds}
+                    remainderLastPeriod={data.remainder}
+                    budgeted={categories.reduce((acc, category) => acc + category.budgeted, 0.)}
+                  />
                 </Col>
               </Row>
-              <Row gutter={24} style={rowStyle}>
-                <Col span={6}>
-                  <BudgetCategory props={data[0]} daysLeft={daysLeft} />
-                </Col>
-                <Col span={6}>
-                  <BudgetCategory props={data[1]} daysLeft={daysLeft} />
-                </Col>
-                <Col span={6}>
-                  <BudgetCategory props={data[2]} daysLeft={daysLeft} />
-                </Col>
-                <Col span={6}>
-                  <BudgetCategory props={data[3]} daysLeft={daysLeft} />
-                </Col>
-              </Row>
+
+              {
+                this.createRows(3)
+              }
+              
             </Content>
 
             <Footer style={{ textAlign: 'center' }}>
