@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 
-import { Card, Statistic, Row, Col, Progress, Divider } from 'antd';
+import { Card, Statistic, Divider, Typography } from 'antd';
 import styles from '../../styles';
 import { DeleteIcon } from '../icons/Icons';
 
 export const BudgetCategory = ({props, daysLeft}) => {
   const [hovering, setHovering] = useState(false);
+
+  const [budgetValue, setBudgetValue] = useState(props.budgeted);
   
+  const onBudgetChange = (newValue) => {
+    setBudgetValue(newValue);
+  };
+
   function balance() {
     return props.budgeted - props.spent;
   }
@@ -25,7 +31,8 @@ export const BudgetCategory = ({props, daysLeft}) => {
       <Card.Grid style={gridStyle}>
         <Statistic 
             title='Budgeted'
-            value={props.budgeted}
+            formatter={ () => <Typography.Text editable= {{ onChange: onBudgetChange }}>{budgetValue}</Typography.Text> }
+            valueStyle={{ fontSize: '1.5em' }}
             precision={2}
             prefix={'€'}
             decimalSeparator={','}
