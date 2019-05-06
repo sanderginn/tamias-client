@@ -1,31 +1,37 @@
 import React from 'react';
 import { Card, Col, Row, Statistic, Typography } from 'antd';
 
-export const BudgetOverview = ({startDate, endDate, daysLeft, availableFunds, remainderLastPeriod, budgeted}) => {
+export const BudgetOverview = ({startDate, endDate, daysLeft, availableFunds, remainderLastPeriod, budgeted, spent}) => {
 
   const forNextMonth = (availableFunds + remainderLastPeriod - budgeted).toFixed(2);
+  const statisticStyle = {
+    display: 'table',
+    margin: '0 auto'
+  };
 
   return(
     <Card>
-      <Row>
+      <Row type='flex' justify='space-around' align='middle'>
+        <Col span={8} style={{ textAlign: 'center' }}>
+          <Typography.Title level={2}>{startDate.format('MMM Do')} - {endDate.format('MMM Do')}</Typography.Title>
+        </Col>
+
         <Col span={8}>
           <Row>
-            <Col span={8}>
-              <Statistic 
-                title='From'
-                value={startDate.format('MMM Do')}
-              />
-            </Col>
-            <Col span={8}>
-              <Statistic 
-                title='To'
-                value={endDate.format('MMM Do')}
-              />
-            </Col>
-            <Col span={8}>
+            <Col span={12}>
               <Statistic
                 title='Days left'
                 value={daysLeft}
+                style={statisticStyle}
+              />
+            </Col>
+            <Col span={12}>
+              <Statistic
+                title='Remaining budget'
+                value={spent}
+                prefix={'€'}
+                toFixed={2}
+                style={statisticStyle}
               />
             </Col>
           </Row>
