@@ -30,6 +30,8 @@ export const BudgetOverview = ({startDate, endDate, daysLeft, availableFunds, re
                 title='Remaining budget'
                 value={spent}
                 prefix={'€'}
+                decimalSeparator={','}
+                groupSeparator={'.'}
                 toFixed={2}
                 style={statisticStyle}
               />
