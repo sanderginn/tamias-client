@@ -1,34 +1,21 @@
 import React from 'react';
-import { Col, Row } from 'antd';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { BudgetCategory } from '../budgetcategory/BudgetCategory';
-import styles from '../../styles';
 
-export const BudgetGrid = ({ categories, numCols, daysLeft }) => {
+export const BudgetGrid = ({ categories, daysLeft }) => {
   return (
-    categories
-      .map((category, index) => <BudgetCategory props={category} daysLeft={daysLeft} key={index} />)
-      .reduce(function (rows, category) {
-        let lastIndex = rows.length - 1;
-        let nextCol =
-          <Col span={24 / numCols} key={rows[lastIndex].length}>
-            {category}
-          </Col>;
-
-        if (rows[lastIndex].length < numCols) {
-          rows[lastIndex].push(nextCol);
-        } else {
-          rows.push([nextCol]);
-        }
-
-        return rows;
-      }, [[]])
-      .map((rowCategories, index) => {
-        return (
-          <Row gutter={24} style={styles.rowStyle} key={index}>
-            {rowCategories}
-          </Row>
+    <Row>
+      {
+        categories
+          .sort((curr, next) => (curr.group > next.group) ? 1 : -1)
+          .map((category, index) =>
+          <Col xs="12" sm="6" md="6" lg="4" className="mb-3" key={index}>
+            <BudgetCategory props={category} daysLeft={daysLeft} key={index} />
+          </Col>
         )
-      })
+      }
+    </Row>
   )
 }
 
