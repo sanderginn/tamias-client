@@ -16,10 +16,15 @@ export const colors = {
 export const noPaddingLeft = { paddingLeft: '0px' };
 export const extraPaddingRight = {paddingRight: '16px'};
 
+const rowStyle = {
+  marginBottom: '24px'
+};
+
 const styles = {
   colors,
   noPaddingLeft,
-  extraPaddingRight
+  extraPaddingRight,
+  rowStyle
 };
 
 export default styles;
