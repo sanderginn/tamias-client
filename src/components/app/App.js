@@ -61,19 +61,21 @@ class App extends React.Component {
   render() {
     return (
       <div className='app'>
-        <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="/">Tamias</Navbar.Brand>
-          <Navbar.Collapse id="navbar-nav">
-            <Nav className="mr-auto">
-              <Nav.Link href="/budget">Budget</Nav.Link>
-              <NavDropdown title="Accounts" id="navbar-accounts">
-                <NavDropdown.Item href="/account/checking">Checking</NavDropdown.Item>
-                <NavDropdown.Item href="/account/saving">Saving</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="/newaccount">New account</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
+        <Navbar bg='dark' variant='dark' expand="lg" >
+          <Container>
+            <Navbar.Brand href="/">Tamias</Navbar.Brand>
+            <Navbar.Collapse id="navbar-nav">
+              <Nav className="mr-auto">
+                <Nav.Link href="/budget">Budget</Nav.Link>
+                <NavDropdown title="Accounts" id="navbar-accounts">
+                  <NavDropdown.Item href="/account/checking">Checking</NavDropdown.Item>
+                  <NavDropdown.Item href="/account/saving">Saving</NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/newaccount">New account</NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
         </Navbar>
 
         <Container style={{ marginTop: '20px' }}>

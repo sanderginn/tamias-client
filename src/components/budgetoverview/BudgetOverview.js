@@ -4,6 +4,8 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Statistic from '../statistic/Statistic';
+
 export const BudgetOverview = ({ startDate, endDate, daysLeft, availableFunds, remainderLastPeriod, budgeted, spent }) => {
 
   const forNextMonth = (availableFunds + remainderLastPeriod - budgeted).toFixed(2);
@@ -11,7 +13,7 @@ export const BudgetOverview = ({ startDate, endDate, daysLeft, availableFunds, r
   return (
     <Row className="mb-4">
       <Col>
-        <Card>
+        <Card border='dark'>
           <Card.Body>
             <Row>
               <Col xs="12" sm className='text-center align-self-center mb-4 mb-sm-0'>
@@ -20,21 +22,23 @@ export const BudgetOverview = ({ startDate, endDate, daysLeft, availableFunds, r
 
               <Col xs="12" sm className="mb-4 mb-sm-0">
                 <Row>
-                  Days left: {daysLeft}
-                </Row>
-                <Row>
-                  Remaining budget: {spent}
+                  <Col xs="6" sm className="mb-4 mb-sm-0">
+                    <Statistic title='Days left' value={daysLeft} />
+                  </Col>
+                  <Col xs="6" sm className="mb-4 mb-sm-0">
+                    <Statistic title='Remaining budget' value={spent} prefix='€' />
+                  </Col>
                 </Row>
               </Col>
 
-              <Col xs="12" sm className="mb-4 mb-sm-0">
+              <Col xs="12" sm className="mb-4 mb-sm-0 align-self-center">
                 <Row>
                   <Col xs="4" className='text-right font-weight-bold'>{availableFunds}</Col>
                   <Col xs="8">Available funds</Col>
                 </Row>
                 <Row>
-                  <Col 
-                    xs="4" 
+                  <Col
+                    xs="4"
                     className={'text-right font-weight-bold ' + (remainderLastPeriod < 0.0 && 'text-danger')}
                   >
                     {remainderLastPeriod}
@@ -46,8 +50,8 @@ export const BudgetOverview = ({ startDate, endDate, daysLeft, availableFunds, r
                   <Col xs="8" >Total budgeted</Col>
                 </Row>
                 <Row>
-                  <Col 
-                    xs="4" 
+                  <Col
+                    xs="4"
                     className={'text-right font-weight-bold ' + (forNextMonth < 0.0 && 'text-danger')}
                   >
                     {forNextMonth}
