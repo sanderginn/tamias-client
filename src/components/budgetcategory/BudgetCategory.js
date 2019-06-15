@@ -7,20 +7,20 @@ import Form from 'react-bootstrap/Form';
 export const BudgetCategory = ({ category, budgeted, spent, daysLeft }) => {
   const [editModeEnabled, setEditMode] = useState(false);
   const budgetRef = useRef();
-  
-  const handleBudgetClick = e => {
-    if (budgetRef.current.contains(e.target)) {
-      return;
-    }
-
-    setEditMode(false);
-    setBudgetInput(budgetValue);
-  }
 
   const [budgetValue, setBudgetValue] = useState(parseFloat(budgeted));
   const [budgetInput, setBudgetInput] = useState(budgetValue);
 
   useEffect(() => {
+    const handleBudgetClick = e => {
+      if (budgetRef.current.contains(e.target)) {
+        return;
+      }
+  
+      setEditMode(false);
+      setBudgetInput(budgetValue);
+    }
+
     document.addEventListener("mousedown", handleBudgetClick);
 
     return () => {
