@@ -12,6 +12,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { BudgetOverview } from '../budgetoverview/BudgetOverview';
 import { BudgetGrid } from '../budgetgrid/BudgetGrid';
 
+
 const categories = [{
   key: 1,
   name: 'Groceries',

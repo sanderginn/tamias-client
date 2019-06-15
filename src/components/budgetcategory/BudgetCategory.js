@@ -4,8 +4,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 
-export const BudgetCategory = ({ props, daysLeft }) => {
-
+export const BudgetCategory = ({ category, budgeted, spent, daysLeft }) => {
   const [editModeEnabled, setEditMode] = useState(false);
   const budgetRef = useRef();
   
@@ -18,7 +17,7 @@ export const BudgetCategory = ({ props, daysLeft }) => {
     setBudgetInput(budgetValue);
   }
 
-  const [budgetValue, setBudgetValue] = useState(props.budgeted);
+  const [budgetValue, setBudgetValue] = useState(parseFloat(budgeted));
   const [budgetInput, setBudgetInput] = useState(budgetValue);
 
   useEffect(() => {
@@ -37,12 +36,12 @@ export const BudgetCategory = ({ props, daysLeft }) => {
   }
   
   function balance() {
-    return props.budgeted - props.spent;
+    return budgeted - spent;
   }
 
   return (
-    <Card border={props.group} style={{ borderWidth: '2px' }}>
-      <Card.Header>{props.name}</Card.Header>
+    <Card border={category.group} style={{ borderWidth: '2px' }}>
+      <Card.Header>{category.name}</Card.Header>
       <ListGroup variant="flush">
         <ListGroup.Item>
           {'Budgeted: '}
@@ -66,7 +65,7 @@ export const BudgetCategory = ({ props, daysLeft }) => {
           </div>
         </ListGroup.Item>
         <ListGroup.Item>
-          Spent: {props.spent.toFixed(2)}
+          Spent: {spent.toFixed(2)}
         </ListGroup.Item>
         <ListGroup.Item>
           Balance: {balance().toFixed(2)}
