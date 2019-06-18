@@ -8,7 +8,7 @@ export const BudgetGrid = ({ data, daysLeft }) => {
     <Row>
       {
         Object.keys(data.categories)
-          .sort((curr, next) => (curr.group > next.group) ? 1 : -1)
+          .sort((curr, next) => (data.categories[curr].group > data.categories[next].group) ? 1 : -1)
           .map((key, index) =>
             <Col xs="12" sm="6" md="6" lg="4" className="mb-3" key={index}>
               <BudgetCategory
