@@ -7,9 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Statistic from '../statistic/Statistic';
 
 export const BudgetOverview = ({ startDate, endDate, daysLeft, availableFunds, remainderLastPeriod, budgeted, spent }) => {
-  console.log(startDate);
-  console.log(endDate);
-  const forNextMonth = (availableFunds + remainderLastPeriod - budgeted).toFixed(2);
+  const forNextMonth = (remainderLastPeriod - budgeted).toFixed(2);
 
   return (
     <Row className="mb-4">

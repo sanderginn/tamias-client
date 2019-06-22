@@ -4,19 +4,21 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 
-export const BudgetCategory = ({ category, budgeted, spent, daysLeft }) => {
+export const BudgetCategory = ({ category, daysLeft }) => {
   const [editModeEnabled, setEditMode] = useState(false);
   const budgetRef = useRef();
 
-  const [budgetValue, setBudgetValue] = useState(parseFloat(budgeted));
+  const [budgetValue, setBudgetValue] = useState(parseFloat(category.budgetedAmount));
   const [budgetInput, setBudgetInput] = useState(budgetValue);
+
+  const spent = category.transactions.reduce((sum, transaction) => sum + parseFloat(transaction.amount), 0.);
 
   useEffect(() => {
     const handleBudgetClick = e => {
       if (budgetRef.current.contains(e.target)) {
         return;
       }
-  
+
       setEditMode(false);
       setBudgetInput(budgetValue);
     }
@@ -34,9 +36,9 @@ export const BudgetCategory = ({ category, budgeted, spent, daysLeft }) => {
       setEditMode(false);
     }
   }
-  
+
   function balance() {
-    return budgeted - spent;
+    return category.budgetedAmount - spent;
   }
 
   return (
@@ -52,7 +54,7 @@ export const BudgetCategory = ({ category, budgeted, spent, daysLeft }) => {
           >
             {
               editModeEnabled ?
-                <Form.Control 
+                <Form.Control
                   style={{ height: '1.5rem' }}
                   value={budgetInput}
                   onChange={e => {

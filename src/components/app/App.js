@@ -1,60 +1,14 @@
-import React from 'react';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import moment from 'moment';
-
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-
-import { BudgetOverview } from '../budgetoverview/BudgetOverview';
-import { BudgetGrid } from '../budgetgrid/BudgetGrid';
-
-import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const categories = [{
-  key: 1,
-  name: 'Groceries',
-  budgeted: 200.0,
-  spent: 80.75,
-  group: 'primary'
-},
-{
-  key: 2,
-  name: 'Lunch',
-  budgeted: 1571.,
-  spent: 31.50,
-  group: 'warning'
-},
-{
-  key: 3,
-  name: 'Social',
-  budgeted: 150.,
-  spent: 183.24,
-  group: 'primary'
-},
-{
-  key: 4,
-  name: 'Random shopping',
-  budgeted: 217.61,
-  spent: 107.98,
-  group: 'info'
-},
-{
-  key: 5,
-  name: 'Foo',
-  budgeted: 0.,
-  spent: 0.,
-  group: 'success'
-}];
-
-// const data = {
-//   availableFunds: 2705.42,
-//   remainder: -21.67
-// };
+import 'bootstrap/dist/css/bootstrap.min.css';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { BudgetGrid } from '../budgetgrid/BudgetGrid';
+import { BudgetOverview } from '../budgetoverview/BudgetOverview';
+import './App.css';
 
 export const App = () => {
 
@@ -62,46 +16,28 @@ export const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const budgetResponse = await axios('/budgets/' + 1);
-      const categoryBudgetAmountsResponse = await axios('/categorybudgetamounts/find_by_budget', {
+      const response = await axios('/find_categories_transactions_by_budgetId', {
         params: {
           budgetId: 1
         }
       });
 
-      const categories = await categoryBudgetAmountsResponse.data.amounts
-        .reduce(async (previous, amount) => {
-          const category = await axios('/categories/' + amount.categoryId);
-          (await previous)[amount.categoryId] = category.data.category;
-          return previous;
-        }, {});
+      response.data.budget.startDate = moment(response.data.budget.startDate);
+      response.data.budget.endDate = moment(response.data.budget.endDate);
 
-      const budgetedAmounts = categoryBudgetAmountsResponse.data.amounts
-        .reduce((previous, amount) => {
-          previous[amount.categoryId] = amount.budgetedAmount;
-          return previous;
-        }, {});
-
-      const transactions = await Object.keys(categories)
-        .reduce(async (previous, key) => {
-          const categoryId = categories[key].id
-          const transactionsForCategory = await axios('/transactions/find_by_category', {
-            params: {
-              categoryId: categoryId
-            }
-          });
-          (await previous)[categoryId] = transactionsForCategory.data.transactions;
-          return previous;
-        }, {});
-
-      budgetResponse.data.budget.startDate = moment(budgetResponse.data.budget.startDate);
-      budgetResponse.data.budget.endDate = moment(budgetResponse.data.budget.endDate);
+      const categories = response.data.categories;
 
       setData({
-        budget: budgetResponse.data.budget,
-        categories: categories,
-        budgetedAmounts: budgetedAmounts,
-        transactions: transactions,
+        budget: response.data.budget,
+        categories: response.data.categories,
+        budgeted: Object.keys(categories)
+          .reduce((acc, key) => acc + parseFloat(categories[key].budgetedAmount), 0.)
+          .toFixed(2),
+        spent: Object.keys(categories)
+          .reduce((acc, key) => acc + categories[key].transactions
+            .reduce((t_acc, transaction) => t_acc + parseFloat(transaction.amount), 0.), 0.)
+          .toFixed(2),
+        remainderLastPeriod: 0., //TODO
         isFetching: false
       });
     }
@@ -113,7 +49,6 @@ export const App = () => {
 
   return (
     <div className='app'>
-      {console.log(data)}
       <Navbar bg='dark' variant='dark' expand="lg" >
         <Container>
           <Navbar.Brand href="/">Tamias</Navbar.Brand>
@@ -134,14 +69,15 @@ export const App = () => {
       {data.isFetching ?
         (<div>Loading...</div>) :
         <Container style={{ marginTop: '20px' }}>
+                  {console.log(data)}
           <BudgetOverview
             startDate={data.budget.startDate}
             endDate={data.budget.endDate}
             daysLeft={daysLeft}
-            availableFunds={data.availableFunds}
-            remainderLastPeriod={data.remainder}
-            budgeted={categories.reduce((acc, category) => acc + category.budgeted, 0.)}
-            spent={categories.reduce((acc, category) => acc + category.spent, 0.)}
+            availableFunds={data.budgeted + data.remainderLastPeriod - data.spent}
+            remainderLastPeriod={data.remainderLastPeriod} // TODO
+            budgeted={data.budgeted}
+            spent={data.spent}
           />
 
           <BudgetGrid
