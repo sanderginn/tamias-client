@@ -16,9 +16,9 @@ export const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios('/find_categories_transactions_by_budgetId', {
+      const response = await axios('/get_current_budget_by_userId', {
         params: {
-          budgetId: 1
+          userId: 1
         }
       });
 
@@ -37,6 +37,8 @@ export const App = () => {
           .reduce((acc, key) => acc + categories[key].transactions
             .reduce((t_acc, transaction) => t_acc + parseFloat(transaction.amount), 0.), 0.)
           .toFixed(2),
+        income: response.data.income,
+        savings: response.data.savings,
         remainderLastPeriod: 0., //TODO
         isFetching: false
       });
@@ -74,7 +76,7 @@ export const App = () => {
             startDate={data.budget.startDate}
             endDate={data.budget.endDate}
             daysLeft={daysLeft}
-            availableFunds={data.budgeted + data.remainderLastPeriod - data.spent}
+            availableFunds={(data.budgeted + data.remainderLastPeriod - data.spent).toFixed(2)}
             remainderLastPeriod={data.remainderLastPeriod} // TODO
             budgeted={data.budgeted}
             spent={data.spent}

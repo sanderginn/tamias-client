@@ -15,22 +15,20 @@ export const BudgetOverview = ({ startDate, endDate, daysLeft, availableFunds, r
         <Card border='dark'>
           <Card.Body>
             <Row>
-              <Col xs="12" sm className='text-center align-self-center mb-4 mb-sm-0'>
+              <Col xs="12" sm="3" className='text-center align-self-center mb-4 mb-sm-0'>
                 <h3 className='align-middle'>{startDate.format('MMM Do')} - {endDate.format('MMM Do')}</h3>
+                <h6 className='align-middle'>Days left: {daysLeft}</h6>
               </Col>
 
-              <Col xs="12" sm className="mb-4 mb-sm-0">
-                <Row>
-                  <Col xs="6" sm className="mb-4 mb-sm-0">
-                    <Statistic title='Days left' value={daysLeft} />
-                  </Col>
-                  <Col xs="6" sm className="mb-4 mb-sm-0">
-                    <Statistic title='Remaining budget' value={spent} prefix='€' />
-                  </Col>
-                </Row>
+              <Col xs="12" sm="2" className="mb-4 mb-sm-0">
+                <Statistic title='Remaining budget' value={spent} prefix='€' />
               </Col>
 
-              <Col xs="12" sm className="mb-4 mb-sm-0 align-self-center">
+              <Col xs="12" sm="3" className="mb-4 mb-sm-0">
+                
+              </Col>
+
+              <Col xs="12" sm="4" className="mb-4 mb-sm-0 align-self-center">
                 <Row>
                   <Col xs="4" className='text-right font-weight-bold'>{availableFunds}</Col>
                   <Col xs="8">Available funds</Col>
