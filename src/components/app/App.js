@@ -76,9 +76,11 @@ export const App = () => {
             startDate={data.budget.startDate}
             endDate={data.budget.endDate}
             daysLeft={daysLeft}
-            availableFunds={(data.budgeted + data.remainderLastPeriod - data.spent).toFixed(2)}
+            income={data.income.transactions.reduce((t_acc, transaction) => t_acc + parseFloat(transaction.amount), 0.).toFixed(2)}
             remainderLastPeriod={data.remainderLastPeriod} // TODO
             budgeted={data.budgeted}
+            savingsGoal={data.budget.goalAmountToSave}
+            savedThisMonth={data.savings.transactions.reduce((t_acc, transaction) => t_acc + parseFloat(transaction.amount), 0.).toFixed(2)}
             spent={data.spent}
           />
 
