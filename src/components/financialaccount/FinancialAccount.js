@@ -1,10 +1,9 @@
 import React from 'react';
-import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 
 export const FinancialAccount = ({ account }) => {
   return (
-    <Table responsive>
+    <Table responsive size="sm">
       {console.log(account)}
       <thead>
         <tr>
@@ -23,7 +22,7 @@ export const FinancialAccount = ({ account }) => {
                 <tr key={index}>
                   <td>{transaction.date.format("DD/MM/Y")}</td>
                   <td>{transaction.comment}</td>
-                  <td>{transaction.categoryId}</td>
+                  <td>{transaction.categoryName}</td>
                   <td>{transaction.amount}</td>
                 </tr>
               )

@@ -26,7 +26,6 @@ export const App = () => {
     (<div>Loading...</div>) :
     (
       <Container style={{ marginTop: '20px' }}>
-        {console.log(data)}
         <BudgetOverview
           startDate={data.budget.startDate}
           endDate={data.budget.endDate}
@@ -50,7 +49,6 @@ export const App = () => {
     (<div>Loading...</div>) :
     (
       <Container style={{ marginTop: '20px' }}>
-        {console.log(match)}
         <FinancialAccount account={data.accounts[match.params.id]} />
       </Container>
     );
@@ -71,31 +69,43 @@ export const App = () => {
 
       const accounts = response.data.accounts
         .reduce((obj, account) => {
-          obj[account.id] = {transactions: [], ...account};
+          obj[account.id] = { transactions: [], ...account };
           return obj;
         }, {});
 
       response.data.transactions.map(transaction => {
         transaction.date = moment(transaction.date);
-        return accounts[transaction.accountId].transactions.push(transaction);
+        return accounts[transaction.accountId].transactions.push(
+          {
+            categoryName: categories[transaction.categoryId].name,
+            ...transaction
+          }
+        );
       });
 
-      setData({
-        budget: response.data.budget,
-        categories: response.data.categories,
-        budgeted: Object.keys(categories)
-          .reduce((acc, key) => acc + parseFloat(categories[key].budgetedAmount), 0.)
-          .toFixed(2),
-        spent: Object.keys(categories)
-          .reduce((acc, key) => acc + categories[key].transactions
-            .reduce((t_acc, transaction) => t_acc + parseFloat(transaction.amount), 0.), 0.)
-          .toFixed(2),
-        income: response.data.income,
-        savings: response.data.savings,
-        accounts: accounts,
-        remainderLastPeriod: 0., //TODO
-        isFetching: false
-      });
+      for (var key in categories) {
+        if (categories[key].type !== "USER_DEFINED")
+          delete categories[key];
+      }
+
+      setData(
+        {
+          budget: response.data.budget,
+          categories: categories,
+          budgeted: Object.keys(categories)
+            .reduce((acc, key) => acc + parseFloat(categories[key].budgetedAmount), 0.)
+            .toFixed(2),
+          spent: Object.keys(categories)
+            .reduce((acc, key) => acc + categories[key].transactions
+              .reduce((t_acc, transaction) => t_acc + parseFloat(transaction.amount), 0.), 0.)
+            .toFixed(2),
+          income: response.data.income,
+          savings: response.data.savings,
+          accounts: accounts,
+          remainderLastPeriod: 0., //TODO
+          isFetching: false
+        }
+      );
     }
 
     fetchData();

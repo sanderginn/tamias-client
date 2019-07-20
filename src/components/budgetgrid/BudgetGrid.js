@@ -6,7 +6,6 @@ import { BudgetCategory } from '../budgetcategory/BudgetCategory';
 export const BudgetGrid = ({ data, daysLeft }) => {
   return (
     <Row>
-      {console.log(data)}
       {
         Object.keys(data.categories)
           .sort((curr, next) => (data.categories[curr].group > data.categories[next].group) ? 1 : -1)
