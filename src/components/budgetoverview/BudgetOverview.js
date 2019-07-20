@@ -4,11 +4,10 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-
-
 export const BudgetOverview = ({ startDate, endDate, daysLeft, income, remainderLastPeriod, budgeted, savingsGoal, savedThisMonth, spent }) => {
   const remainingBudget = (income + remainderLastPeriod - budgeted).toFixed(2);
   const savingsDiff = (savedThisMonth - savingsGoal).toFixed(2);
+  const leftToSpend = budgeted - spent;
 
   return (
     <Row className="mb-4">
@@ -46,11 +45,24 @@ export const BudgetOverview = ({ startDate, endDate, daysLeft, income, remainder
                   >
                     {remainingBudget}
                   </Col>
-                  <Col xs="8">Remaining budget</Col>
+                  <Col xs="8">{remainingBudget < 0.0 ? "Overbudgeted" : "Remaining budget"}</Col>
                 </Row>
               </Col>
 
               <Col xs="12" sm="4" className="mb-4 mb-sm-0 align-self-center">
+                <Row>
+                  <Col xs="4" className='text-right font-weight-bold'>{spent}</Col>
+                  <Col xs="8">Spent so far</Col>
+                </Row>
+                <Row>
+                  <Col
+                    xs="4"
+                className={'text-right font-weight-bold ' + (leftToSpend < 0.0 && 'text-danger')}
+                >
+                  {leftToSpend}
+                </Col>
+                  <Col xs="8">{leftToSpend < 0.0 ? "Overspent" : "Left to spend"}</Col>
+                </Row>
                 <Row>
                   <Col xs="4" className='text-right font-weight-bold'>{savingsGoal}</Col>
                   <Col xs="8">Savings goal</Col>
