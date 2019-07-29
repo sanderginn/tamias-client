@@ -17,10 +17,42 @@ import { FinancialAccount } from '../financialaccount/FinancialAccount';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { NewFinancialAccountModal } from '../newfinancialaccountmodal/NewFinancialAccountModal';
 
 export const App = () => {
+  const tempUserId = 1;
 
   const [data, setData] = useState({ budget: undefined, categories: [], isFetching: true });
+  const [newFinancialAccountShow, setNewFinancialAccountShow] = useState(false);
+
+  const addAccount = async (name) => {
+    try {
+      const response = await axios.post('/accounts', {
+        name: name,
+        userId: tempUserId
+      });
+
+      var updatedAccounts = { ...data.accounts };
+
+      updatedAccounts[response.data.newAccount.id] = {
+        name: response.data.newAccount.name,
+        userId: response.data.newAccount.userId,
+        transactions: [],
+        id: response.data.newAccount.id
+      };
+
+      setData({
+        ...data,
+        accounts: updatedAccounts
+      });
+
+      setNewFinancialAccountShow(false);
+
+    } catch (err) {
+      console.log(err);
+      // return response;
+    }
+  }
 
   const Budget = () => data.isFetching ?
     (<div>Loading...</div>) :
@@ -58,7 +90,7 @@ export const App = () => {
     const fetchData = async () => {
       const response = await axios('/get_current_budget_by_userId', {
         params: {
-          userId: 1
+          userId: tempUserId
         }
       });
 
@@ -137,7 +169,7 @@ export const App = () => {
                       )
                   }
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/newaccount">New account</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => setNewFinancialAccountShow(true)}>New account</NavDropdown.Item>
                 </NavDropdown>
                 }
               </Nav>
@@ -147,6 +179,12 @@ export const App = () => {
 
         <Route exact path="/" component={Budget} />
         <Route path="/account/:id" component={Account} />
+
+        <NewFinancialAccountModal
+          show={newFinancialAccountShow}
+          onHide={() => setNewFinancialAccountShow(false)}
+          onSubmit={addAccount}
+        />
       </Router>
     </div>
   );

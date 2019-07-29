@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 
 export const FinancialAccount = ({ account }) => {
   return (
-    <Table responsive size="sm">
+    <Table responsive striped hover size="sm">
       {console.log(account)}
       <thead>
         <tr>
@@ -15,7 +15,7 @@ export const FinancialAccount = ({ account }) => {
       </thead>
       <tbody>
         {
-          account.transactions
+          account && account.transactions
             .sort((a, b) => b.date - a.date)
             .map((transaction, index) => {
               return (
