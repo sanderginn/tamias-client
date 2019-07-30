@@ -48,9 +48,8 @@ export const App = () => {
 
       setNewFinancialAccountShow(false);
 
-    } catch (err) {
-      console.log(err);
-      // return response;
+    } catch (e) {
+      return e.response.data;
     }
   }
 
